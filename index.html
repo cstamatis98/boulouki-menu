@@ -45,28 +45,33 @@ html{
   scroll-behavior:smooth;
 }
 
-body{
-  min-height:100vh;
+body {
+  min-height: 100vh;
+  
+  /* 1. Η ασφάλειά σας: Αν το iOS μπερδευτεί με τα gradients, 
+        θα εφαρμόσει αυτό το χρώμα και ΔΕΝ θα γίνει άσπρο */
+  background-color: #030303; 
 
-  background:
+  /* 2. Τα gradients γραμμένα με συμβατότητα για WebKit (iOS) */
+  background-image:
     radial-gradient(
       circle at 10% 8%,
-      rgba(255,0,140,.16),
+      rgba(255, 0, 140, 0.16) 0%,
       transparent 25%
     ),
     radial-gradient(
       circle at 90% 15%,
-      rgba(22,221,215,.13),
+      rgba(22, 221, 215, 0.13) 0%,
       transparent 25%
     ),
     radial-gradient(
       circle at 50% 65%,
-      rgba(255,0,140,.055),
+      rgba(255, 0, 140, 0.055) 0%,
       transparent 34%
     ),
     radial-gradient(
       circle at 85% 85%,
-      rgba(22,221,215,.07),
+      rgba(22, 221, 215, 0.07) 0%,
       transparent 30%
     ),
     linear-gradient(
@@ -76,16 +81,10 @@ body{
       #030303 100%
     );
 
-  color:var(--white);
-
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-  overflow-x:hidden;
-
-  position:relative;
+  color: var(--white);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  position: relative;
 }
 
 
