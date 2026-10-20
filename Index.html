@@ -1,0 +1,4575 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Μπουλούκι — Digital Menu</title>
+
+<style>
+
+:root{
+  --bg:#030303;
+  --bg2:#080808;
+  --card:#0c0c0e;
+  --card2:#111115;
+
+  --pink:#ff008c;
+  --pink2:#ff4db1;
+  --teal:#16ddd7;
+  --yellow:#e8e51b;
+
+  --white:#f7f7f5;
+  --text:#dedede;
+  --muted:#888;
+  --muted2:#666;
+
+  --line:rgba(255,255,255,.09);
+
+  --shadow:0 18px 50px rgba(0,0,0,.45);
+  --radius:22px;
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  min-height:100vh;
+
+  background:
+    radial-gradient(
+      circle at 10% 8%,
+      rgba(255,0,140,.16),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 90% 15%,
+      rgba(22,221,215,.13),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 50% 65%,
+      rgba(255,0,140,.055),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 85% 85%,
+      rgba(22,221,215,.07),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #020202 0%,
+      #070707 48%,
+      #030303 100%
+    );
+
+  color:var(--white);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  overflow-x:hidden;
+
+  position:relative;
+}
+
+
+/* =====================================================
+   BACKGROUND GLOW
+===================================================== */
+
+body::before{
+  content:"";
+
+  position:fixed;
+  inset:-20%;
+
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      circle at 18% 18%,
+      rgba(255,0,140,.11),
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 82% 32%,
+      rgba(22,221,215,.08),
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      rgba(255,0,140,.055),
+      transparent 25%
+    );
+
+  filter:blur(35px);
+
+  animation:
+    backgroundGlow 12s
+    ease-in-out
+    infinite alternate;
+
+  z-index:-2;
+}
+
+
+@keyframes backgroundGlow{
+
+  0%{
+    transform:
+      translate3d(-1%,0,0)
+      scale(1);
+  }
+
+  50%{
+    transform:
+      translate3d(1%,1%,0)
+      scale(1.035);
+  }
+
+  100%{
+    transform:
+      translate3d(-1%,-1%,0)
+      scale(1.02);
+  }
+
+}
+
+
+/* =====================================================
+   DOT PATTERN
+===================================================== */
+
+body::after{
+  content:"";
+
+  position:fixed;
+  inset:0;
+
+  pointer-events:none;
+
+  opacity:.13;
+
+  background-image:
+    radial-gradient(
+      rgba(255,255,255,.13) 1px,
+      transparent 1px
+    );
+
+  background-size:24px 24px;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      black,
+      transparent 88%
+    );
+
+  z-index:-1;
+}
+
+
+/* =====================================================
+   APP
+===================================================== */
+
+.app{
+  width:100%;
+  max-width:1100px;
+
+  margin:auto;
+
+  min-height:100vh;
+
+  padding-bottom:30px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header{
+  position:sticky;
+
+  top:10px;
+
+  z-index:100;
+
+  height:58px;
+
+  width:calc(100% - 28px);
+
+  margin:10px auto 0;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  padding:0 9px;
+
+  background:
+    rgba(10,10,10,.68);
+
+  backdrop-filter:
+    blur(22px)
+    saturate(140%);
+
+  -webkit-backdrop-filter:
+    blur(22px)
+    saturate(140%);
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  border-radius:22px;
+
+  box-shadow:
+    0 12px 35px
+    rgba(0,0,0,.28),
+
+    0 0 35px
+    rgba(255,0,140,.035);
+
+}
+
+
+/* μικρό φωτεινό περίγραμμα */
+
+.header::before{
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  border-radius:22px;
+
+  padding:1px;
+
+  background:
+    linear-gradient(
+      110deg,
+      rgba(255,0,140,.18),
+      transparent 35%,
+      transparent 65%,
+      rgba(22,221,215,.13)
+    );
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0)
+    content-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite:xor;
+
+  mask-composite:exclude;
+
+  pointer-events:none;
+}
+
+
+/* =====================================================
+   HAMBURGER
+===================================================== */
+
+.menu-btn{
+  width:42px;
+  height:42px;
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  border-radius:14px;
+
+  background:
+    rgba(255,255,255,.045);
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:5px;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+  position:relative;
+
+  z-index:2;
+}
+
+
+.menu-btn:hover{
+  background:
+    rgba(255,0,140,.10);
+
+  border-color:
+    rgba(255,0,140,.30);
+}
+
+
+.menu-btn span{
+  width:18px;
+  height:2px;
+
+  background:white;
+
+  border-radius:10px;
+
+  transition:.25s;
+}
+
+
+/* =====================================================
+   BRAND
+===================================================== */
+
+.brand{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:5px 14px;
+  min-width:0;
+
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+
+  background:rgba(255,255,255,.025);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 4px 16px rgba(0,0,0,.18);
+
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:3.5px;
+  white-space:nowrap;
+}
+
+.brand span{
+  color:var(--pink);
+}
+
+
+/* =====================================================
+   LANGUAGE
+===================================================== */
+
+.lang-switch{
+  display:flex;
+
+  align-items:center;
+
+  gap:4px;
+
+  padding:4px;
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  border-radius:13px;
+
+  background:
+    rgba(255,255,255,.035);
+
+  position:relative;
+
+  z-index:2;
+}
+
+
+.lang-btn{
+  border:0;
+
+  background:transparent;
+
+  color:#777;
+
+  padding:6px 8px;
+
+  border-radius:9px;
+
+  font-size:10px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+
+.lang-btn.active{
+  background:white;
+
+  color:black;
+
+  box-shadow:
+    0 3px 12px
+    rgba(255,255,255,.12);
+}
+
+
+/* =====================================================
+   SIDE MENU
+===================================================== */
+
+.overlay{
+  position:fixed;
+
+  inset:0;
+
+  background:
+    rgba(0,0,0,.68);
+
+  backdrop-filter:blur(6px);
+
+  opacity:0;
+
+  visibility:hidden;
+
+  transition:.3s;
+
+  z-index:150;
+}
+
+
+.overlay.active{
+  opacity:1;
+
+  visibility:visible;
+}
+
+
+.side-menu{
+  position:fixed;
+
+  top:0;
+  left:0;
+
+  width:min(330px,88vw);
+
+  height:100dvh;
+
+  background:
+    radial-gradient(
+      circle at 10% 5%,
+      rgba(255,0,140,.15),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(22,221,215,.07),
+      transparent 30%
+    ),
+    #080808;
+
+  border-right:
+    1px solid rgba(255,255,255,.08);
+
+  transform:translateX(-105%);
+
+  transition:
+    transform .35s
+    cubic-bezier(.2,.8,.2,1);
+
+  z-index:200;
+
+  padding:22px;
+}
+
+
+.side-menu.active{
+  transform:translateX(0);
+}
+
+
+.side-close{
+  width:42px;
+  height:42px;
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  border-radius:13px;
+
+  background:
+    rgba(255,255,255,.035);
+
+  color:white;
+
+  font-size:22px;
+
+  cursor:pointer;
+}
+
+
+.side-title{
+  margin:35px 0 20px;
+
+  font-size:12px;
+
+  color:var(--muted);
+
+  letter-spacing:3px;
+
+  text-transform:uppercase;
+}
+
+
+.side-link{
+  width:100%;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+  padding:15px 14px;
+
+  margin-bottom:8px;
+
+  border:
+    1px solid rgba(255,255,255,.07);
+
+  border-radius:16px;
+
+  background:
+    rgba(255,255,255,.025);
+
+  color:white;
+
+  font-size:14px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+
+.side-link:hover{
+  border-color:
+    rgba(255,0,140,.4);
+
+  transform:translateX(4px);
+}
+
+
+.side-link .icon{
+  font-size:20px;
+}
+
+
+/* =====================================================
+   SCREENS
+===================================================== */
+
+.screen{
+  display:none;
+
+  padding:24px 18px 0;
+}
+
+
+.screen.active{
+  display:block;
+}
+
+
+/* =====================================================
+   LANDING
+===================================================== */
+
+.landing{
+  min-height:
+    calc(100dvh - 72px);
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  padding-top:15px;
+}
+
+
+/* =====================================================
+   ROCKING LOGO
+===================================================== */
+
+@keyframes rockingLogo{
+
+  0%{
+    transform:rotate(-4deg);
+  }
+
+  25%{
+    transform:rotate(4deg);
+  }
+
+  50%{
+    transform:rotate(-4deg);
+  }
+
+  75%{
+    transform:rotate(4deg);
+  }
+
+  100%{
+    transform:rotate(-4deg);
+  }
+
+}
+
+
+.landing-logo{
+
+  width:min(245px,62vw);
+
+  max-height:145px;
+
+  object-fit:contain;
+
+  display:block;
+
+  animation:
+    rockingLogo 4.8s
+    ease-in-out
+    infinite;
+
+  transform-origin:50% 82%;
+
+  filter:
+    drop-shadow(
+      0 0 18px
+      rgba(255,0,140,.20)
+    )
+    drop-shadow(
+      0 0 28px
+      rgba(22,221,215,.08)
+    );
+
+  margin:5px auto 7px;
+}
+
+
+/* =====================================================
+   LANDING INTRO
+===================================================== */
+
+.landing-intro{
+  text-align:center;
+
+  max-width:600px;
+
+  margin-bottom:20px;
+}
+
+
+.landing-welcome{
+  color:var(--pink);
+
+  font-size:10px;
+
+  font-weight:900;
+
+  letter-spacing:4px;
+
+  text-transform:uppercase;
+
+  margin-bottom:10px;
+}
+
+
+.landing-title{
+  font-size:
+    clamp(28px,6vw,48px);
+
+  line-height:1.02;
+
+  font-weight:950;
+
+  letter-spacing:-1.5px;
+
+  margin-bottom:10px;
+}
+
+
+.landing-subtitle{
+  color:#9a9a9a;
+
+  font-size:13px;
+
+  line-height:1.6;
+}
+
+
+.neon-line{
+  width:min(250px,65%);
+
+  height:1px;
+
+  margin:3px auto 20px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--pink),
+      var(--teal),
+      transparent
+    );
+
+  box-shadow:
+    0 0 10px
+    rgba(255,0,140,.35),
+
+    0 0 10px
+    rgba(22,221,215,.25);
+}
+
+
+/* =====================================================
+   CAROUSEL
+===================================================== */
+
+.carousel{
+  position:relative;
+
+  width:100%;
+
+  max-width:900px;
+
+  margin:0 auto 22px;
+
+  border-radius:24px;
+
+  overflow:hidden;
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  background:#080808;
+
+  box-shadow:
+    0 20px 55px
+    rgba(0,0,0,.45),
+
+    0 0 30px
+    rgba(255,0,140,.06);
+
+  touch-action:pan-y;
+}
+
+
+.carousel-track{
+  display:flex;
+
+  width:100%;
+
+  transition:
+    transform .55s
+    cubic-bezier(.2,.8,.2,1);
+}
+
+
+.carousel-slide{
+  flex:0 0 100%;
+
+  width:100%;
+
+  aspect-ratio:16 / 8.8;
+
+  position:relative;
+
+  overflow:hidden;
+}
+
+
+.carousel-slide img{
+  width:100%;
+  height:100%;
+
+  display:block;
+
+  object-fit:cover;
+
+  user-select:none;
+
+  -webkit-user-drag:none;
+
+  transition:
+    transform .7s
+    ease;
+}
+
+
+.carousel-slide::after{
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,0,140,.13),
+      transparent 42%,
+      rgba(22,221,215,.10)
+    );
+
+  pointer-events:none;
+}
+
+
+/* =====================================================
+   CAROUSEL ARROWS
+===================================================== */
+
+.carousel-arrow{
+  position:absolute;
+
+  top:50%;
+
+  transform:translateY(-50%);
+
+  width:42px;
+  height:42px;
+
+  border:
+    1px solid rgba(255,255,255,.18);
+
+  border-radius:50%;
+
+  background:
+    rgba(0,0,0,.50);
+
+  backdrop-filter:blur(8px);
+
+  color:white;
+
+  font-size:20px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  cursor:pointer;
+
+  z-index:5;
+
+  transition:.2s;
+}
+
+
+.carousel-arrow:hover{
+  background:
+    rgba(255,0,140,.75);
+
+  border-color:
+    rgba(255,255,255,.4);
+}
+
+
+.carousel-prev{
+  left:12px;
+}
+
+
+.carousel-next{
+  right:12px;
+}
+
+
+/* =====================================================
+   DOTS
+===================================================== */
+
+.carousel-dots{
+  position:absolute;
+
+  left:50%;
+  bottom:12px;
+
+  transform:translateX(-50%);
+
+  display:flex;
+
+  gap:6px;
+
+  padding:6px 9px;
+
+  border-radius:20px;
+
+  background:
+    rgba(0,0,0,.38);
+
+  backdrop-filter:blur(8px);
+
+  z-index:5;
+}
+
+
+.carousel-dot{
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+
+  border:0;
+
+  padding:0;
+
+  background:
+    rgba(255,255,255,.38);
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+
+.carousel-dot.active{
+  width:20px;
+
+  border-radius:10px;
+
+  background:white;
+
+  box-shadow:
+    0 0 10px
+    rgba(255,255,255,.4);
+}
+
+
+/* =====================================================
+   THREE MAIN OPTIONS
+===================================================== */
+
+.main-choices{
+  width:100%;
+
+  max-width:900px;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:12px;
+
+  margin:0 auto;
+}
+
+
+.main-choice{
+  position:relative;
+
+  min-height:105px;
+
+  padding:18px 14px;
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.015)
+    );
+
+  color:white;
+
+  cursor:pointer;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  text-align:center;
+
+  overflow:hidden;
+
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+
+.main-choice::before{
+  content:"";
+
+  position:absolute;
+
+  width:110px;
+  height:110px;
+
+  border-radius:50%;
+
+  background:
+    rgba(255,0,140,.08);
+
+  filter:blur(25px);
+
+  top:-45px;
+  left:50%;
+
+  transform:translateX(-50%);
+}
+
+
+.main-choice:nth-child(2)::before{
+  background:
+    rgba(22,221,215,.08);
+}
+
+
+.main-choice:nth-child(3)::before{
+  background:
+    rgba(232,229,27,.07);
+}
+
+
+.main-choice:hover{
+  transform:translateY(-4px);
+
+  border-color:
+    rgba(255,0,140,.40);
+
+  box-shadow:
+    0 15px 35px
+    rgba(0,0,0,.35),
+
+    0 0 25px
+    rgba(255,0,140,.08);
+}
+
+
+.choice-icon{
+  font-size:25px;
+
+  margin-bottom:9px;
+
+  position:relative;
+}
+
+
+.choice-title{
+  position:relative;
+
+  font-size:12px;
+
+  font-weight:950;
+
+  letter-spacing:1.7px;
+}
+
+
+.choice-text{
+  position:relative;
+
+  color:#777;
+
+  font-size:9px;
+
+  margin-top:6px;
+}
+
+
+/* =====================================================
+   MENU HOME
+===================================================== */
+
+.hero{
+  text-align:center;
+
+  padding:5px 0 20px;
+}
+
+
+.hero-logo{
+  width:min(270px,70vw);
+
+  max-height:160px;
+
+  object-fit:contain;
+
+  display:block;
+
+  animation:
+    rockingLogo 4.8s
+    ease-in-out
+    infinite;
+
+  transform-origin:50% 82%;
+
+  filter:
+    drop-shadow(
+      0 0 20px
+      rgba(255,0,140,.18)
+    );
+
+  margin:0 auto 10px;
+}
+
+
+.eyebrow{
+  color:var(--pink);
+
+  font-size:10px;
+
+  font-weight:900;
+
+  letter-spacing:3px;
+
+  text-transform:uppercase;
+
+  margin-bottom:10px;
+}
+
+
+.hero h1{
+  font-size:
+    clamp(28px,6vw,46px);
+
+  line-height:1.05;
+
+  margin-bottom:10px;
+}
+
+
+.hero p{
+  color:#999;
+
+  font-size:13px;
+
+  line-height:1.6;
+
+  max-width:600px;
+
+  margin:auto;
+}
+
+
+.categories{
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:12px;
+
+  max-width:900px;
+
+  margin:20px auto 0;
+}
+
+
+.category{
+  min-height:150px;
+
+  padding:18px;
+
+  border-radius:20px;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.045),
+      rgba(255,255,255,.012)
+    );
+
+  cursor:pointer;
+
+  overflow:hidden;
+
+  transition:.25s;
+}
+
+
+.category:hover{
+  transform:translateY(-4px);
+
+  border-color:
+    rgba(255,0,140,.4);
+}
+
+
+.category-icon{
+  font-size:30px;
+
+  margin-bottom:25px;
+}
+
+
+
+.category-title{
+  font-size:15px;
+  font-weight:900;
+  color:#ffffff;
+  text-shadow:
+    0 0 5px rgba(255,255,255,.25),
+    0 0 12px rgba(255,0,140,.35);
+}
+
+
+
+.category-description{
+  color:#d0d0d8;
+
+  font-size:10px;
+
+  line-height:1.5;
+
+  margin-top:6px;
+}
+
+
+/* =====================================================
+   LIST
+===================================================== */
+
+.back-btn{
+  border:
+    1px solid rgba(255,255,255,.09);
+
+  background:
+    rgba(255,255,255,.035);
+
+  color:white;
+
+  padding:10px 14px;
+
+  border-radius:12px;
+
+  font-size:11px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  margin-bottom:20px;
+}
+
+
+.page-heading{
+  margin-bottom:20px;
+}
+
+
+.page-heading h2{
+  font-size:30px;
+
+  margin-bottom:6px;
+}
+
+
+.page-heading p{
+  color:#777;
+
+  font-size:12px;
+}
+
+
+.items{
+  display:grid;
+
+  gap:10px;
+
+  max-width:850px;
+
+  margin:auto;
+}
+
+
+.item{
+  width:100%;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:15px;
+
+  padding:16px;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  border-radius:18px;
+
+  background:
+    rgba(255,255,255,.025);
+
+  cursor:pointer;
+
+  color:white;
+
+  text-align:left;
+}
+
+
+.item-info{
+  min-width:0;
+}
+
+
+.item-name{
+  font-size:14px;
+
+  font-weight:900;
+}
+
+
+.item-desc{
+  color:#777;
+
+  font-size:10px;
+
+  line-height:1.5;
+
+  margin-top:4px;
+}
+
+
+.item-price{
+  flex-shrink:0;
+
+  color:var(--pink);
+
+  font-size:14px;
+
+  font-weight:950;
+}
+
+
+/* =====================================================
+   DETAIL
+===================================================== */
+
+.detail{
+  max-width:700px;
+
+  margin:auto;
+}
+
+
+.detail-icon{
+  font-size:50px;
+
+  margin:15px 0;
+}
+
+
+.detail h2{
+  font-size:34px;
+
+  line-height:1.05;
+}
+
+
+.detail-price{
+  color:var(--pink);
+
+  font-size:20px;
+
+  font-weight:900;
+
+  margin:10px 0 18px;
+}
+
+
+.detail-description{
+  color:#aaa;
+
+  font-size:14px;
+
+  line-height:1.7;
+
+  margin-bottom:22px;
+}
+
+
+.detail-box{
+  padding:16px;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  border-radius:18px;
+
+  background:
+    rgba(255,255,255,.025);
+
+  margin-bottom:10px;
+}
+
+
+.detail-box strong{
+  display:block;
+
+  color:white;
+
+  font-size:10px;
+
+  letter-spacing:2px;
+
+  text-transform:uppercase;
+
+  margin-bottom:8px;
+}
+
+
+.detail-box span{
+  color:#888;
+
+  font-size:12px;
+
+  line-height:1.6;
+}
+
+
+/* =====================================================
+   EVENTS
+===================================================== */
+
+.events-page{
+  max-width:850px;
+
+  margin:auto;
+}
+
+.event-photo {
+  overflow: hidden;
+  padding: 0;
+}
+
+.event-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.events-hero{
+  text-align:center;
+
+  padding:25px 0 30px;
+}
+
+
+.big-icon{
+  font-size:48px;
+
+  margin-bottom:12px;
+}
+
+
+.events-hero h2,
+.member-hero h2{
+  font-size:32px;
+
+  margin-bottom:8px;
+}
+
+
+.events-hero p,
+.member-hero p{
+  color:#888;
+
+  font-size:13px;
+
+  line-height:1.7;
+
+  max-width:500px;
+
+  margin:auto;
+}
+
+
+.event-card{
+  padding:20px;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.045),
+      rgba(255,255,255,.015)
+    );
+
+  margin-bottom:12px;
+}
+
+
+/* Three featured event cards with image space */
+.events-list{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+.event-card{display:grid;grid-template-columns:minmax(0, .95fr) minmax(0, 1.05fr);gap:20px;align-items:stretch;overflow:hidden;padding:14px}
+.event-photo{min-height:190px;border:1px dashed rgba(255,255,255,.28);border-radius:14px;background:linear-gradient(135deg,rgba(222,68,135,.18),rgba(255,255,255,.025));display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;color:#aaa;font-size:11px;letter-spacing:1px;line-height:1.7}
+.event-copy{padding:8px 8px 8px 0;display:flex;flex-direction:column;justify-content:center}
+.event-card h3{line-height:1.25}
+.event-card .event-date{display:inline-flex;align-self:flex-start;border:1px solid rgba(255,95,165,.35);background:rgba(255,95,165,.08);border-radius:30px;padding:7px 10px;letter-spacing:1px}
+@media(max-width:560px){.event-card{grid-template-columns:1fr;gap:12px}.event-photo{min-height:170px}.event-copy{padding:4px 5px 8px}}
+
+.event-date{
+  color:var(--pink);
+
+  font-size:10px;
+
+  font-weight:900;
+
+  letter-spacing:2px;
+}
+
+
+.event-card h3{
+  margin:9px 0 7px;
+
+  font-size:20px;
+}
+
+
+.event-card p{
+  color:#888;
+
+  font-size:12px;
+
+  line-height:1.6;
+}
+
+
+/* =====================================================
+   MEMBERSHIP
+===================================================== */
+
+.member-page{
+  max-width:650px;
+
+  margin:auto;
+}
+
+
+.member-hero{
+  text-align:center;
+
+  padding:25px 0;
+}
+
+
+.member-form{
+  display:grid;
+
+  gap:12px;
+}
+
+
+.form-group label{
+  display:block;
+
+  color:#aaa;
+
+  font-size:10px;
+
+  font-weight:800;
+
+  letter-spacing:1px;
+
+  margin:0 0 7px 3px;
+}
+
+
+.form-group input,
+.form-group textarea{
+  width:100%;
+
+  border:
+    1px solid rgba(255,255,255,.09);
+
+  border-radius:15px;
+
+  background:
+    rgba(255,255,255,.035);
+
+  color:white;
+
+  padding:14px;
+
+  outline:none;
+
+  font-family:inherit;
+
+  font-size:13px;
+}
+
+
+.form-group textarea{
+  min-height:110px;
+
+  resize:vertical;
+}
+
+
+.member-submit{
+  border:0;
+
+  border-radius:16px;
+
+  padding:15px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--pink),
+      #ff3da9
+    );
+
+  color:white;
+
+  font-size:12px;
+
+  font-weight:950;
+
+  letter-spacing:1px;
+
+  cursor:pointer;
+
+  margin-top:5px;
+
+  box-shadow:
+    0 10px 30px
+    rgba(255,0,140,.18);
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer{
+  text-align:center;
+
+  color:#555;
+
+  font-size:9px;
+
+  letter-spacing:2px;
+
+  margin-top:35px;
+
+  padding:20px 0;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media(max-width:900px){
+
+  .app{
+    max-width:760px;
+  }
+
+  .main-choices{
+    max-width:680px;
+  }
+
+  .categories{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .category{
+    min-height:135px;
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:600px){
+  .brand{
+    padding:4px 11px;
+    font-size:11px;
+    letter-spacing:2.5px;
+  }
+}
+
+
+  .menu-btn{
+    width:39px;
+    height:39px;
+
+    border-radius:13px;
+  }
+
+
+  .lang-switch{
+    padding:3px;
+
+    border-radius:12px;
+  }
+
+
+  .lang-btn{
+    padding:6px 7px;
+
+    font-size:9px;
+  }
+
+
+  .screen{
+    padding:
+      18px 13px 0;
+  }
+
+
+  .landing{
+    min-height:
+      calc(100dvh - 64px);
+
+    padding-top:3px;
+  }
+
+
+  .landing-logo{
+    width:min(210px,68vw);
+
+    max-height:120px;
+
+    margin-top:0;
+
+    margin-bottom:2px;
+
+    animation-duration:5s;
+  }
+
+
+  .landing-welcome{
+    font-size:9px;
+
+    letter-spacing:3px;
+
+    margin-bottom:8px;
+  }
+
+
+  .landing-title{
+    font-size:29px;
+
+    letter-spacing:-1px;
+
+    margin-bottom:7px;
+  }
+
+
+  .landing-subtitle{
+    font-size:11px;
+
+    line-height:1.5;
+
+    padding:0 10px;
+  }
+
+
+  .neon-line{
+    width:45%;
+
+    margin:
+      5px auto 16px;
+  }
+
+
+  .carousel{
+    border-radius:18px;
+
+    margin-bottom:15px;
+
+    box-shadow:
+      0 15px 35px
+      rgba(0,0,0,.42);
+  }
+
+
+  .carousel-slide{
+    aspect-ratio:
+      4 / 3;
+  }
+
+
+  .carousel-arrow{
+    width:34px;
+    height:34px;
+
+    font-size:17px;
+  }
+
+
+  .carousel-prev{
+    left:8px;
+  }
+
+
+  .carousel-next{
+    right:8px;
+  }
+
+
+  .carousel-dots{
+    bottom:8px;
+
+    gap:5px;
+
+    padding:5px 8px;
+  }
+
+
+  .carousel-dot{
+    width:6px;
+    height:6px;
+  }
+
+
+  .carousel-dot.active{
+    width:17px;
+  }
+
+
+  .main-choices{
+    width:100%;
+
+    grid-template-columns:1fr;
+
+    gap:8px;
+  }
+
+
+  .main-choice{
+    min-height:72px;
+
+    flex-direction:row;
+
+    justify-content:flex-start;
+
+    text-align:left;
+
+    padding:13px 16px;
+
+    border-radius:17px;
+  }
+
+
+  .choice-icon{
+    width:42px;
+
+    flex-shrink:0;
+
+    font-size:23px;
+
+    margin:0;
+
+    text-align:center;
+  }
+
+
+  .choice-title{
+    font-size:11px;
+  }
+
+
+  .choice-text{
+    font-size:9px;
+
+    margin-top:4px;
+  }
+
+
+  .hero-logo{
+    width:min(220px,68vw);
+
+    max-height:125px;
+
+    animation-duration:5s;
+  }
+
+
+  .hero h1{
+    font-size:29px;
+  }
+
+
+  .hero p{
+    font-size:11px;
+  }
+
+
+  .categories{
+    grid-template-columns:
+      1fr 1fr;
+
+    gap:8px;
+
+    margin-top:14px;
+  }
+
+
+  .category{
+    min-height:125px;
+
+    padding:14px;
+
+    border-radius:17px;
+  }
+
+
+  .category-icon{
+    font-size:26px;
+
+    margin-bottom:17px;
+  }
+
+
+  .category-title{
+    font-size:12px;
+  }
+
+
+  .category-description{
+    font-size:9px;
+  }
+
+
+  .item{
+    padding:14px;
+
+    border-radius:16px;
+  }
+
+
+  .item-name{
+    font-size:13px;
+  }
+
+
+  .item-desc{
+    font-size:9px;
+  }
+
+
+  .item-price{
+    font-size:13px;
+  }
+
+
+  .detail-icon{
+    font-size:42px;
+  }
+
+
+  .detail h2{
+    font-size:29px;
+  }
+
+
+  .detail-description{
+    font-size:12px;
+  }
+
+
+  .events-hero,
+  .member-hero{
+    padding:
+      15px 0 22px;
+  }
+
+
+  .events-hero h2,
+  .member-hero h2{
+    font-size:28px;
+  }
+
+
+  .events-hero p,
+  .member-hero p{
+    font-size:11px;
+  }
+
+
+  .event-card{
+    padding:16px;
+
+    border-radius:17px;
+  }
+
+
+  .event-card h3{
+    font-size:17px;
+  }
+
+
+  .event-card p{
+    font-size:11px;
+  }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media(max-width:380px){
+  .brand{
+    padding:4px 9px;
+    font-size:10px;
+    letter-spacing:2px;
+  }
+}
+
+  .landing-title{
+    font-size:26px;
+  }
+
+
+  .carousel-slide{
+    aspect-ratio:
+      4 / 3.15;
+  }
+
+
+  .main-choice{
+    min-height:67px;
+  }
+
+
+  .category{
+    min-height:115px;
+  }
+
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+  .landing-logo,
+  .hero-logo,
+  body::before{
+    animation:none;
+  }
+
+}
+
+
+
+/* MENU UPDATE: contact, opening hours and venue information */
+.boulouki-footer{display:flex;flex-direction:column;align-items:center;gap:16px;padding:34px 20px 28px;text-align:center;border-top:1px solid rgba(255,255,255,.09);}
+.footer-brand{font-weight:900;letter-spacing:.22em;font-size:1.25rem;color:var(--white);text-shadow:0 0 18px rgba(255,0,140,.35);}
+.footer-contact{display:flex;flex-direction:column;gap:9px;}
+.footer-contact a{color:var(--text);text-decoration:none;font-size:.92rem;}
+.footer-hours{width:min(100%,330px);text-align:left;}
+.footer-hours>strong{display:block;text-align:center;color:var(--teal);margin-bottom:9px;}
+.footer-hours div{display:flex;justify-content:space-between;gap:16px;padding:6px 2px;border-bottom:1px solid rgba(255,255,255,.07);font-size:.88rem;color:var(--text);}
+.footer-socials{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
+.footer-socials a{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.13);border-radius:999px;padding:9px 13px;color:var(--white);text-decoration:none;background:rgba(255,255,255,.035);}
+.footer-socials a:hover{border-color:var(--pink);box-shadow:0 0 16px rgba(255,0,140,.16);}
+.footer-wifi{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px 12px;border:1px solid rgba(22,221,215,.22);background:rgba(22,221,215,.04);border-radius:14px;padding:12px 16px;font-size:.9rem;}
+.footer-wifi strong{color:var(--teal);}
+.footer-legal{max-width:680px;color:var(--muted);font-size:.76rem;line-height:1.65;}
+.footer-copy{color:var(--muted2);font-size:.68rem;letter-spacing:.16em;}
+
+
+
+/* Social links in the side menu */
+.side-socials{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin:24px 16px 12px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.14);
+}
+.side-socials a{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#d0d0d8;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+  padding:9px 10px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+}
+.side-socials a:hover{
+  color:#ff4db1;
+  border-color:#ff008c;
+}
+.member-consent{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin:16px 0;
+  color:#c9c9d1;
+  font-size:12px;
+  line-height:1.5;
+}
+.member-consent input{
+  width:auto;
+  min-width:16px;
+  margin-top:3px;
+}
+.member-privacy-note{
+  color:#a8a8b3;
+  font-size:11px;
+  line-height:1.5;
+  margin:10px 0 14px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- OVERLAY -->
+
+<div
+  class="overlay"
+  id="overlay">
+</div>
+
+
+<!-- SIDE MENU -->
+
+<aside class="side-menu" id="sideMenu">
+  <button class="side-close" onclick="closeMenu()" aria-label="Close menu">×</button>
+
+  <button class="side-link" onclick="openMenuHome()">
+    <span class="icon">☰</span>
+    <span data-gr="Τιμοκατάλογος" data-en="Menu">Τιμοκατάλογος</span>
+  </button>
+  <button class="side-link" onclick="openEvents()">
+    <span class="icon">★</span>
+    <span data-gr="Events" data-en="Events">Events</span>
+  </button>
+  <button class="side-link" onclick="openMembership()">
+    <span class="icon">♥</span>
+    <span data-gr="Γίνε μέλος" data-en="Become a Member">Γίνε μέλος</span>
+  </button>
+
+  <div class="side-socials" aria-label="Social media">
+    <a href="https://www.tiktok.com/@boulouki_athens?_r=1&_t=ZN-9AbHz7grLvS" target="_blank" rel="noopener noreferrer" aria-label="TikTok">♪ <span>TikTok</span></a>
+    <a href="https://www.facebook.com/share/16HXzzVBDVB/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f <span>Facebook</span></a>
+    <a href="https://www.instagram.com/boulouki_athens?vrfl=Y3RqaTF2MWtjdzdy" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎ <span>Instagram</span></a>
+  </div>
+</aside>
+
+
+
+<div class="app">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+  <button
+    class="menu-btn"
+    onclick="openMenu()">
+
+    <span></span>
+    <span></span>
+    <span></span>
+
+  </button>
+
+
+  
+
+
+  <div class="lang-switch">
+
+    <button
+      class="lang-btn active"
+      id="grBtn"
+      onclick="setLanguage('gr')">
+      GR
+    </button>
+
+    <button
+      class="lang-btn"
+      id="enBtn"
+      onclick="setLanguage('en')">
+      EN
+    </button>
+
+  </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     LANDING
+===================================================== -->
+
+<main
+  class="screen active"
+  id="landingScreen">
+
+  <div class="landing">
+
+
+    <img
+      src="logo.png"
+      alt="Μπουλούκι"
+      class="landing-logo">
+
+    <div class="landing-intro">
+
+      <div
+        class="landing-welcome"
+        data-gr="Καλώς ήρθατε"
+        data-en="Welcome">
+        Καλώς ήρθατε
+      </div>
+
+
+      <h1
+        class="landing-title"
+        data-gr="Μπουλούκι"
+        data-en="Boulouki">
+        Μπουλούκι
+      </h1>
+
+
+      <p
+        class="landing-subtitle"
+        data-gr="Ο χώρος, η παρέα, η μουσική και όλα όσα χρειάζεσαι σε ένα σημείο."
+        data-en="The place, the people, the music and everything you need in one place.">
+
+        Ο χώρος, η παρέα, η μουσική και όλα όσα χρειάζεσαι σε ένα σημείο.
+
+      </p>
+
+    </div>
+
+
+    <div class="neon-line"></div>
+
+
+
+    <!-- CAROUSEL -->
+
+    <div
+      class="carousel"
+      id="carousel">
+
+      <div
+        class="carousel-track"
+        id="carouselTrack">
+
+
+        <div class="carousel-slide">
+          <img
+            src="boulouki-1.jpeg"
+            alt="Μπουλούκι — χώρος"
+            draggable="false">
+        </div>
+
+
+        <div class="carousel-slide">
+          <img
+            src="boulouki-2.jpeg"
+            alt="Μπουλούκι — χώρος"
+            draggable="false">
+        </div>
+
+
+        <div class="carousel-slide">
+          <img
+            src="boulouki-3.jpeg"
+            alt="Μπουλούκι — χώρος"
+            draggable="false">
+        </div>
+
+
+        <div class="carousel-slide">
+          <img
+            src="boulouki-4.jpeg"
+            alt="Μπουλούκι — χώρος"
+            draggable="false">
+        </div>
+
+
+        <div class="carousel-slide">
+          <img
+            src="boulouki-5.jpeg"
+            alt="Μπουλούκι — χώρος"
+            draggable="false">
+        </div>
+
+
+        <div class="carousel-slide">
+          <img
+            src="boulouki-6.jpeg"
+            alt="Μπουλούκι — χώρος"
+            draggable="false">
+        </div>
+
+
+        <div class="carousel-slide">
+          <img
+            src="boulouki-7.jpeg"
+            alt="Μπουλούκι — χώρος"
+            draggable="false">
+        </div>
+
+
+        <div class="carousel-slide">
+          <img
+            src="boulouki-8.jpeg"
+            alt="Μπουλούκι — χώρος"
+            draggable="false">
+        </div>
+ 
+        <div class="carousel-slide">
+          <img
+            src="boulouki-9.jpeg"
+            alt="Μπουλούκι — χώρος"
+            draggable="false">
+        </div>
+      </div>
+
+
+      <button
+        class="carousel-arrow carousel-prev"
+        onclick="previousSlide()"
+        aria-label="Previous">
+        ‹
+      </button>
+
+
+      <button
+        class="carousel-arrow carousel-next"
+        onclick="nextSlide()"
+        aria-label="Next">
+        ›
+      </button>
+
+
+      <div
+        class="carousel-dots"
+        id="carouselDots">
+      </div>
+
+    </div>
+
+
+
+    <!-- THREE OPTIONS -->
+
+    <div class="main-choices">
+
+
+      <button
+        class="main-choice"
+        onclick="openMenuHome()">
+
+        <div class="choice-icon">
+          ☰
+        </div>
+
+        <div>
+
+          <div
+            class="choice-title"
+            data-gr="ΤΙΜΟΚΑΤΑΛΟΓΟΣ"
+            data-en="MENU">
+            ΤΙΜΟΚΑΤΑΛΟΓΟΣ
+          </div>
+
+          <div
+            class="choice-text"
+            data-gr="Δες τον κατάλογό μας"
+            data-en="Explore our menu">
+            Δες τον κατάλογό μας
+          </div>
+
+        </div>
+
+      </button>
+
+
+
+      <button
+        class="main-choice"
+        onclick="openEvents()">
+
+        <div class="choice-icon">
+          ★
+        </div>
+
+        <div>
+
+          <div
+            class="choice-title"
+            data-gr="EVENTS"
+            data-en="EVENTS">
+            EVENTS
+          </div>
+
+          <div
+            class="choice-text"
+            data-gr="Δες τι έρχεται"
+            data-en="See what's coming">
+            Δες τι έρχεται
+          </div>
+
+        </div>
+
+      </button>
+
+
+
+      <button
+        class="main-choice"
+        onclick="openMembership()">
+
+        <div class="choice-icon">
+          ♥
+        </div>
+
+        <div>
+
+          <div
+            class="choice-title"
+            data-gr="ΓΙΝΕ ΜΕΛΟΣ"
+            data-en="BECOME A MEMBER">
+            ΓΙΝΕ ΜΕΛΟΣ
+          </div>
+
+          <div
+            class="choice-text"
+            data-gr="Μπες στην παρέα"
+            data-en="Join the crew">
+            Μπες στην παρέα
+          </div>
+
+        </div>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</main>
+
+
+
+<!-- =====================================================
+     MENU HOME
+===================================================== -->
+
+
+<main
+  class="screen"
+  id="menuHomeScreen">
+
+  <button
+    class="back-btn"
+    onclick="goLanding()">
+
+    ←
+
+    <span
+      data-gr="Αρχική"
+      data-en="Home">
+      Αρχική
+    </span>
+
+  </button>
+
+  <section class="hero">
+
+    <img
+      src="logo.png"
+      alt="Μπουλούκι"
+      class="hero-logo">
+
+    <div
+      class="eyebrow"
+      data-gr="Digital Menu"
+      data-en="Digital Menu">
+      Digital Menu
+    </div>
+
+    <h1
+      data-gr="Ο κατάλογός μας"
+      data-en="Our Menu">
+      Ο κατάλογός μας
+    </h1>
+
+    <p
+      data-gr="Διάλεξε κατηγορία και ανακάλυψε ό,τι έχουμε ετοιμάσει για σένα."
+      data-en="Choose a category and discover what we have prepared for you.">
+      Διάλεξε κατηγορία και ανακάλυψε ό,τι έχουμε ετοιμάσει για σένα.
+    </p>
+
+  </section>
+
+
+  <div
+    class="categories"
+    id="categories">
+  </div>
+
+</main>
+
+
+
+<!-- =====================================================
+     LIST
+===================================================== -->
+
+<main
+  class="screen"
+  id="listScreen">
+
+  <button
+    class="back-btn"
+    onclick="openMenuHome()">
+
+    ←
+
+    <span
+      data-gr="Πίσω"
+      data-en="Back">
+      Πίσω
+    </span>
+
+  </button>
+
+
+  <section class="page-heading">
+
+    <h2 id="listTitle"></h2>
+
+    <p id="listSubtitle"></p>
+
+  </section>
+
+
+  <div
+    class="items"
+    id="items">
+  </div>
+
+</main>
+
+
+
+<!-- =====================================================
+     DETAIL
+===================================================== -->
+
+<main
+  class="screen"
+  id="detailScreen">
+
+  <button
+    class="back-btn"
+    onclick="goList()">
+
+    ←
+
+    <span
+      data-gr="Πίσω"
+      data-en="Back">
+      Πίσω
+    </span>
+
+  </button>
+
+
+  <section class="detail">
+
+    <div
+      class="detail-icon"
+      id="detailIcon">
+    </div>
+
+
+    <h2 id="detailName"></h2>
+
+
+    <div
+      class="detail-price"
+      id="detailPrice">
+    </div>
+
+
+    <p
+      class="detail-description"
+      id="detailDescription">
+    </p>
+
+
+    <div class="detail-box">
+
+      <strong
+        data-gr="Υλικά"
+        data-en="Ingredients">
+        Υλικά
+      </strong>
+
+      <span id="detailIngredients"></span>
+
+    </div>
+
+
+    <div class="detail-box">
+
+      <strong
+        data-gr="Αλλεργιογόνα"
+        data-en="Allergens">
+        Αλλεργιογόνα
+      </strong>
+
+      <span id="detailAllergens"></span>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     EVENTS
+===================================================== -->
+
+<main
+  class="screen"
+  id="eventsScreen">
+
+  <button
+    class="back-btn"
+    onclick="goLanding()">
+
+    ←
+
+    <span
+      data-gr="Αρχική"
+      data-en="Home">
+      Αρχική
+    </span>
+
+  </button>
+
+
+  <section class="events-page">
+
+    <div class="events-hero">
+
+      <div class="big-icon">
+        ★
+      </div>
+
+      <h2
+        data-gr="Events"
+        data-en="Events">
+        Events
+      </h2>
+
+      <p
+        data-gr="Εδώ θα βρίσκεις τα επόμενα events, parties και special βραδιές στο Μπουλούκι."
+        data-en="Here you'll find upcoming events, parties and special nights at Boulouki.">
+        Εδώ θα βρίσκεις τα επόμενα events, parties και special βραδιές στο Μπουλούκι.
+      </p>
+
+    </div>
+
+
+    <div class="events-list">
+      <article class="event-card">
+        
+<div class="event-photo">
+  <img src="Event1.jpeg" alt="Σούπερ Κατερίνα στα decks">
+</div>
+
+        <div class="event-copy">
+          <div class="event-date" data-gr="16 ΟΚΤΩΒΡΙΟΥ" data-en="16 OCTOBER">16 ΟΚΤΩΒΡΙΟΥ</div>
+          <h3 data-gr="Σούπερ Κατερίνα στα decks" data-en="Super Katerina on the decks">Σούπερ Κατερίνα στα decks</h3>
+          <p data-gr="Με τραγούδια λαϊκά και όχι μόνο. Μια βραδιά γεμάτη μουσική, κέφι και Μπουλούκι!" data-en="Greek laïko hits and much more. A night full of music, energy and Boulouki vibes!">Με τραγούδια λαϊκά και όχι μόνο. Μια βραδιά γεμάτη μουσική, κέφι και Μπουλούκι!</p>
+        </div>
+      </article>
+      <article class="event-card">
+        <div class="event-photo"><img src="Event2.jpeg" alt="Φωτογραφία δεύτερου event"></div>
+        <div class="event-copy">
+          <div class="event-date" data-gr="19 ΣΕΠΤΕΜΒΡΙΟΥ" data-en="19 SEPTEMBER">19 ΣΕΠΤΕΜΒΡΙΟΥ</div>
+          <h3 data-gr="Μουσική βραδιά στο Μπουλούκι με Βασίλη Χατζημακρή και Γιώργο Αργύρη" data-en="Music night at Boulouki with Vasilis Chatzimakris and Giorgos Argyris">Μουσική βραδιά στο Μπουλούκι με Βασίλη Χατζημακρή και Γιώργο Αργύρη</h3>
+          <p data-gr="'Εντεχνα τραγούδια με την φωνή του Βασίλη Χατζημακρή και στην κιθάρα ο Γιώργος Αργύρης." data-en="Art songs featuring the voice of Vasilis Chatzimakris, with Giorgos Argyris on guitar.">'Εντεχνα τραγούδια με την φωνή του Βασίλη Χατζημακρή και στην κιθάρα ο Γιώργος Αργύρης.</p>
+        </div>
+      </article>
+      <article class="event-card">
+        <div class="event-photo"><img src="Event3.jpeg" alt="Φωτογραφία τρίτου event"></div>
+        <div class="event-copy">
+          <div class="event-date" data-gr="12 ΣΕΠΤΕΜΒΡΙΟΥ" data-en="12 SEPTEMBER">12 ΣΕΠΤΕΜΒΡΙΟΥ</div>
+          <h3 data-gr="DJ George" data-en="DJ George">DJ George</h3>
+          <p data-gr="Disco party στο μπουλούκι με τις μελωδίες από τον αγαπημένο μας DJ που μας ταξιδεύει!" data-en="A disco party with the crew, featuring tunes from our favorite DJ who takes us on a journey!">Disco party στο μπουλούκι με τις μελωδίες από τον αγαπημένο μας DJ που μας ταξιδεύει!</p>
+        </div>
+      </article>
+    </div>
+
+  </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     MEMBERSHIP
+===================================================== -->
+
+<main
+  class="screen"
+  id="membershipScreen">
+
+  <button
+    class="back-btn"
+    onclick="goLanding()">
+
+    ←
+
+    <span
+      data-gr="Αρχική"
+      data-en="Home">
+      Αρχική
+    </span>
+
+  </button>
+
+
+  <section class="member-page">
+
+    <div class="member-hero">
+
+      <div class="big-icon">
+        ♥
+      </div>
+
+
+      <h2
+        data-gr="Γίνε Μέλος"
+        data-en="Become a Member">
+        Γίνε Μέλος
+      </h2>
+
+
+      <p
+        data-gr="Μπες στην παρέα του Μπουλουκιού και μείνε ενημερωμένος για events και νέα."
+        data-en="Join the Boulouki crew and stay updated about events and news.">
+        Μπες στην παρέα του Μπουλουκιού και μείνε ενημερωμένος για events και νέα.
+      </p>
+
+    </div>
+
+
+    <form
+      class="member-form"
+      action="https://formsubmit.co/mpoulouki@outlook.com"
+      method="POST">
+
+      <input type="hidden" name="_subject" value="Νέα εγγραφή μέλους - Μπουλούκι">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="true">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+
+      <div class="form-group">
+
+        <label
+          data-gr="ΟΝΟΜΑ"
+          data-en="NAME">
+          ΟΝΟΜΑ
+        </label>
+
+        <input
+          type="text"
+          id="memberName"
+          name="Όνομα"
+          required
+          autocomplete="name"
+          placeholder="Το όνομά σου">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label
+          data-gr="EMAIL"
+          data-en="EMAIL">
+          EMAIL
+        </label>
+
+        <input
+          type="email"
+          id="memberEmail"
+          name="Email"
+          required
+          autocomplete="email"
+          placeholder="email@example.com">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label
+          data-gr="ΤΗΛΕΦΩΝΟ"
+          data-en="PHONE">
+          ΤΗΛΕΦΩΝΟ
+        </label>
+
+        <input
+          type="tel"
+          id="memberPhone"
+          name="Τηλέφωνο"
+          autocomplete="tel"
+          placeholder="69XXXXXXXX">
+
+      </div>
+
+
+      <div class="form-group">
+        <label for="memberFavoriteDrink" data-gr="ΑΓΑΠΗΜΕΝΟ ΠΟΤΟ (ΠΡΟΑΙΡΕΤΙΚΟ)" data-en="FAVOURITE DRINK (OPTIONAL)">ΑΓΑΠΗΜΕΝΟ ΠΟΤΟ (ΠΡΟΑΙΡΕΤΙΚΟ)</label>
+        <input type="text" id="memberFavoriteDrink" name="Αγαπημένο ποτό" placeholder="π.χ. μπύρα, τσίπουρο..." data-placeholder-gr="π.χ. μπύρα, τσίπουρο..." data-placeholder-en="e.g. beer, tsipouro...">
+      </div>
+
+      <p class="member-privacy-note" data-gr="Χρησιμοποιούμε τα στοιχεία σου για την εγγραφή σου και την επικοινωνία σχετικά με τη συμμετοχή σου. Δες την ενημέρωση προστασίας προσωπικών δεδομένων ή επικοινώνησε στο mpoulouki@outlook.com για πληροφορίες σχετικά με τα δικαιώματά σου και τη διατήρηση των στοιχείων σου." data-en="We use your details to register you and communicate about your membership. For information about data protection, your rights and how long your details are kept, contact mpoulouki@outlook.com.">Χρησιμοποιούμε τα στοιχεία σου για την εγγραφή σου και την επικοινωνία σχετικά με τη συμμετοχή σου. Δες την ενημέρωση προστασίας προσωπικών δεδομένων ή επικοινώνησε στο mpoulouki@outlook.com για πληροφορίες σχετικά με τα δικαιώματά σου και τη διατήρηση των στοιχείων σου.</p>
+
+      <label class="member-consent">
+        <input type="checkbox" name="Συγκατάθεση επεξεργασίας" value="Ναι" required>
+        <span data-gr="Έχω διαβάσει την ενημέρωση προστασίας προσωπικών δεδομένων και συμφωνώ να χρησιμοποιηθούν τα στοιχεία μου για την εγγραφή μου και την επικοινωνία σχετικά με αυτήν." data-en="I have read the privacy information and agree to the use of my details for membership registration and related communication.">Έχω διαβάσει την ενημέρωση προστασίας προσωπικών δεδομένων και συμφωνώ να χρησιμοποιηθούν τα στοιχεία μου για την εγγραφή μου και την επικοινωνία σχετικά με αυτήν.</span>
+      </label>
+
+      <label class="member-consent">
+        <input type="checkbox" name="Προαιρετικές προσφορές" value="Ναι">
+        <span data-gr="Θέλω προαιρετικά να λαμβάνω ενημερώσεις για προσφορές, κεράσματα και νέα του Μπουλουκιού." data-en="I would also like to receive optional updates about offers, treats and Boulouki news.">Θέλω προαιρετικά να λαμβάνω ενημερώσεις για προσφορές, κεράσματα και νέα του Μπουλουκιού.</span>
+      </label>
+
+      <button
+        type="submit"
+        class="member-submit"
+        data-gr="ΕΓΓΡΑΦΗ"
+        data-en="JOIN NOW">
+        ΕΓΓΡΑΦΗ
+      </button>
+
+    </form>
+
+  </section>
+
+</main>
+
+
+
+<footer class="footer boulouki-footer">
+  <div class="footer-brand">ΜΠΟΥΛΟΥΚΙ</div>
+  <div class="footer-contact">
+    <a href="https://maps.google.com/?q=Κάρπου+36,+Αθήνα" target="_blank" rel="noopener">📍 Κάρπου 36, Αθήνα · Μετρό Άγιος Ιωάννης</a>
+    <a href="tel:+302101068906">☎ 210 106 8906</a>
+  </div>
+  <div class="footer-hours">
+    <strong data-gr="Ωράριο λειτουργίας" data-en="Opening hours">Ωράριο λειτουργίας</strong>
+    <div><span data-gr="Δευτέρα" data-en="Monday">Δευτέρα</span><span data-gr="Κλειστά" data-en="Closed">Κλειστά</span></div>
+    <div><span data-gr="Τρίτη" data-en="Tuesday">Τρίτη</span><span data-gr="Κλειστά" data-en="Closed">Κλειστά</span></div>
+    <div><span data-gr="Τετάρτη" data-en="Wednesday">Τετάρτη</span><span>17:00–02:00</span></div>
+    <div><span data-gr="Πέμπτη" data-en="Thursday">Πέμπτη</span><span>17:00–02:00</span></div>
+    <div><span data-gr="Παρασκευή" data-en="Friday">Παρασκευή</span><span>17:00–03:00</span></div>
+    <div><span data-gr="Σάββατο" data-en="Saturday">Σάββατο</span><span>17:00–03:00</span></div>
+    <div><span data-gr="Κυριακή" data-en="Sunday">Κυριακή</span><span>17:00–02:00</span></div>
+  </div>
+  <div class="footer-socials" aria-label="Social media">
+    <a href="https://www.instagram.com/boulouki_athens?vrfl=Y3RqaTF2MWtjdzdy" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">◎ <span>Instagram</span></a>
+    <a href="https://www.tiktok.com/@boulouki_athens?_r=1&_t=ZN-9AbHz7grLvS" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">♪ <span>TikTok</span></a>
+    <a href="https://www.facebook.com/share/16HXzzVBDVB/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">f <span>Facebook</span></a>
+  </div>
+  <div class="footer-wifi"><strong>Wi-Fi</strong><span>BOULOUKI</span><strong data-gr="Κωδικός" data-en="Password">Κωδικός</strong><span>BOU36louki!</span></div>
+  <p class="footer-legal" data-gr="Αν είσαστε αλλεργικοί σε κάτι, παρακαλούμε ενημερώστε μας. Οι τιμές περιλαμβάνουν ΦΠΑ και τους λοιπούς νόμιμους φόρους. Το κατάστημα έχει υποχρέωση να εκδίδει αποδείξεις λιανικής πώλησης και διαθέτει POS." data-en="Please inform us if you have any allergies. Prices include VAT and all other applicable taxes. The establishment is required to issue retail receipts and accepts card payments (POS).">Αν είσαστε αλλεργικοί σε κάτι, παρακαλούμε ενημερώστε μας. Οι τιμές περιλαμβάνουν ΦΠΑ και τους λοιπούς νόμιμους φόρους. Το κατάστημα έχει υποχρέωση να εκδίδει αποδείξεις λιανικής πώλησης και διαθέτει POS.</p>
+  <div class="footer-copy">© 2026 CKS DIGITAL EXPERIENCE</div>
+</footer>
+
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   MENU
+===================================================== */
+
+const MENU = {
+  "gastronomy": {
+    "icon": "🍽️",
+    "gr": {
+      "name": "Γαστρονομία",
+      "description": "Μεζέδες και γεύσεις για τη μέση."
+    },
+    "en": {
+      "name": "Food & Meze",
+      "description": "Meze and flavours to share."
+    },
+    "items": [
+      {
+        "name": "Πατατοσαλάτα",
+        "price": "5,00€",
+        "description": "",
+        "ingredients": "Πατατοσαλάτα",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Ντολμαδάκια",
+        "price": "5,00€",
+        "description": "",
+        "ingredients": "Ντολμαδάκια",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Σαγανάκι τυρί",
+        "price": "6,50€",
+        "description": "",
+        "ingredients": "Σαγανάκι τυρί",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Τυροκεφτεδάκια Φλώρινας",
+        "price": "4,50€",
+        "description": "",
+        "ingredients": "Τυροκεφτεδάκια Φλώρινας",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Σφακιανή πίτα",
+        "price": "4,50€",
+        "description": "Με γέμιση μυζήθρας Νεοχωρίου, άνηθο, μέλι και σουσάμι.",
+        "ingredients": "Με γέμιση μυζήθρας Νεοχωρίου, άνηθο, μέλι και σουσάμι.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Τυρί Μαστέλο Χίου",
+        "price": "6,50€",
+        "description": "Με μαρμελάδα πιπεριάς Φλώρινας.",
+        "ingredients": "Με μαρμελάδα πιπεριάς Φλώρινας.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Ντάκος Ζωγραφιστός",
+        "price": "6,50€",
+        "description": "Με μυζήθρα Νεοχωρίου, ντομάτα και αφράτα παξιμάδια Επιδαύρου.",
+        "ingredients": "Με μυζήθρα Νεοχωρίου, ντομάτα και αφράτα παξιμάδια Επιδαύρου.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Φαλάφελ",
+        "price": "7,00€",
+        "description": "Με vegan μαγιονέζα τρούφας.",
+        "ingredients": "Με vegan μαγιονέζα τρούφας.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Πατάτες τηγανητές μυρωδάτες",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Πατάτες τηγανητές μυρωδάτες",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Μεζές του βουνού",
+        "price": "5,50€",
+        "description": "Ποικιλία αλλαντικών.",
+        "ingredients": "Ποικιλία αλλαντικών.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Τηγανόψωμο με πεπερόνι",
+        "price": "5,50€",
+        "description": "Τηγανητό ψωμί με γέμιση μυζήθρα και πεπερόνι.",
+        "ingredients": "Τηγανητό ψωμί με γέμιση μυζήθρα και πεπερόνι.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Empanadas με κοτόπουλο",
+        "price": "7,50€",
+        "description": "Πιτάκι με τηγανιά κοτόπουλο και τυρί.",
+        "ingredients": "Πιτάκι με τηγανιά κοτόπουλο και τυρί.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Ζουμερές μαριναρισμένες φτερούγες κοτόπουλο",
+        "price": "7,50€",
+        "description": "",
+        "ingredients": "Ζουμερές μαριναρισμένες φτερούγες κοτόπουλο",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Μπριζολάκια με σάλτσα μελιού",
+        "price": "9,00€",
+        "description": "Ωριμασμένα σε chilli και σκόρδο.",
+        "ingredients": "Ωριμασμένα σε chilli και σκόρδο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Λουκάνικο ξιδάτο • πικάντικο",
+        "price": "5,50€",
+        "description": "Με μουστάρδα.",
+        "ingredients": "Με μουστάρδα.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Λουκάνικο ριγανάτο",
+        "price": "5,50€",
+        "description": "Με σάλτσα barbecue.",
+        "ingredients": "Με σάλτσα barbecue.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      }
+    ]
+  },
+  "signatureCocktails": {
+    "icon": "🍹",
+    "gr": {
+      "name": "Τα δικά μας cocktails",
+      "description": "Cocktailakia εμπνευσμένα από αγαπημένους ήρωες."
+    },
+    "en": {
+      "name": "Our Signature Cocktails",
+      "description": "Signature cocktails inspired by beloved characters."
+    },
+    "items": [
+      {
+        "name": "Super Mario",
+        "price": "8,50€",
+        "description": "Βότκα, καρπούζι και γρεναδίνη.",
+        "ingredients": "Βότκα, καρπούζι και γρεναδίνη.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Pac-Man",
+        "price": "9,00€",
+        "description": "Ρούμι, ανανάς και passion fruit.",
+        "ingredients": "Ρούμι, ανανάς και passion fruit.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Cruella de Vil",
+        "price": "8,50€",
+        "description": "Τζιν, πράσινο μήλο, τζίντζερ και lime.",
+        "ingredients": "Τζιν, πράσινο μήλο, τζίντζερ και lime.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Flintstones",
+        "price": "9,00€",
+        "description": "Τεκίλα, μαστίχα, φράουλα και lime.",
+        "ingredients": "Τεκίλα, μαστίχα, φράουλα και lime.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "ThunderCats",
+        "price": "7,50€",
+        "description": "Ρακή, μάνγκο, lime, δυόσμος και ζάχαρη.",
+        "ingredients": "Ρακή, μάνγκο, lime, δυόσμος και ζάχαρη.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Star Wars",
+        "price": "9,00€",
+        "description": "Τζιν, ροδάκινο, μάνγκο και lime.",
+        "ingredients": "Τζιν, ροδάκινο, μάνγκο και lime.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      }
+    ]
+  },
+  "classicCocktails": {
+    "icon": "🍸",
+    "gr": {
+      "name": "Τα γνωστά cocktails",
+      "description": "Κλασικά cocktails και αγαπημένες επιλογές."
+    },
+    "en": {
+      "name": "Classic Cocktails",
+      "description": "Classic cocktails and favourites."
+    },
+    "items": [
+      {
+        "name": "Aperol Spritz",
+        "price": "9,00€",
+        "description": "Aperol, prosecco, πορτοκάλι και σόδα.",
+        "ingredients": "Aperol, prosecco, πορτοκάλι και σόδα.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Zombie",
+        "price": "9,00€",
+        "description": "Λευκό και μαύρο ρούμι, lime, ανανάς και γρεναδίνη.",
+        "ingredients": "Λευκό και μαύρο ρούμι, lime, ανανάς και γρεναδίνη.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Porn Star",
+        "price": "8,50€",
+        "description": "Βότκα, passion fruit, βανίλια και lime.",
+        "ingredients": "Βότκα, passion fruit, βανίλια και lime.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Μαργαρίτα",
+        "price": "9,00€",
+        "description": "Λευκή τεκίλα, triple sec και lime.",
+        "ingredients": "Λευκή τεκίλα, triple sec και lime.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Mojito",
+        "price": "9,00€",
+        "description": "Μαύρο ρούμι, lime, δυόσμος και σόδα.",
+        "ingredients": "Μαύρο ρούμι, lime, δυόσμος και σόδα.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Piña Colada",
+        "price": "9,00€",
+        "description": "Ρούμι, batida de coco, ανανάς και μάνγκο.",
+        "ingredients": "Ρούμι, batida de coco, ανανάς και μάνγκο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Paloma",
+        "price": "9,00€",
+        "description": "Λευκή τεκίλα, lime και σόδα pink grapefruit.",
+        "ingredients": "Λευκή τεκίλα, lime και σόδα pink grapefruit.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Mai Tai",
+        "price": "9,00€",
+        "description": "Ρούμι, lime, πορτοκάλι και αμύγδαλο.",
+        "ingredients": "Ρούμι, lime, πορτοκάλι και αμύγδαλο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Daiquiri φράουλα",
+        "price": "9,00€",
+        "description": "Λευκό ρούμι, lime και φράουλα.",
+        "ingredients": "Λευκό ρούμι, lime και φράουλα.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Negroni",
+        "price": "11,00€",
+        "description": "Campari, τζιν και Martini.",
+        "ingredients": "Campari, τζιν και Martini.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      }
+    ]
+  },
+  "spirits": {
+    "icon": "🥃",
+    "gr": {
+      "name": "Αποστάγματα",
+      "description": "Χειροποίητα και παραδοσιακά αποστάγματα."
+    },
+    "en": {
+      "name": "Spirits",
+      "description": "Handcrafted and traditional spirits."
+    },
+    "items": [
+      {
+        "name": "Ρακόμελο χειροποίητο • 100 ml",
+        "price": "6,00€",
+        "description": "Σερβίρεται ζεστό ή κρύο. Ρακή, μέλι, κανέλα και γαρύφαλλο.",
+        "ingredients": "Σερβίρεται ζεστό ή κρύο. Ρακή, μέλι, κανέλα και γαρύφαλλο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Ρακόμελο χειροποίητο • 250 ml",
+        "price": "10,00€",
+        "description": "Σερβίρεται ζεστό ή κρύο. Ρακή, μέλι, κανέλα και γαρύφαλλο.",
+        "ingredients": "Σερβίρεται ζεστό ή κρύο. Ρακή, μέλι, κανέλα και γαρύφαλλο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Ρακόμελο χειροποίητο • 500 ml",
+        "price": "16,00€",
+        "description": "Σερβίρεται ζεστό ή κρύο. Ρακή, μέλι, κανέλα και γαρύφαλλο.",
+        "ingredients": "Σερβίρεται ζεστό ή κρύο. Ρακή, μέλι, κανέλα και γαρύφαλλο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Βοτανόρακι χειροποίητο • 100 ml",
+        "price": "6,00€",
+        "description": "Σερβίρεται ζεστό ή κρύο.",
+        "ingredients": "Σερβίρεται ζεστό ή κρύο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Βοτανόρακι χειροποίητο • 250 ml",
+        "price": "10,00€",
+        "description": "Σερβίρεται ζεστό ή κρύο.",
+        "ingredients": "Σερβίρεται ζεστό ή κρύο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Βοτανόρακι χειροποίητο • 500 ml",
+        "price": "16,00€",
+        "description": "Σερβίρεται ζεστό ή κρύο.",
+        "ingredients": "Σερβίρεται ζεστό ή κρύο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Ρακή Χανίων • 100 ml",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Ρακή Χανίων • 100 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Ρακή Χανίων • 250 ml",
+        "price": "8,00€",
+        "description": "",
+        "ingredients": "Ρακή Χανίων • 250 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Τσίπουρο Μοσχάτο χωρίς γλυκάνισο • 100 ml",
+        "price": "5,00€",
+        "description": "",
+        "ingredients": "Τσίπουρο Μοσχάτο χωρίς γλυκάνισο • 100 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Τσίπουρο Μοσχάτο χωρίς γλυκάνισο • 250 ml",
+        "price": "9,00€",
+        "description": "",
+        "ingredients": "Τσίπουρο Μοσχάτο χωρίς γλυκάνισο • 250 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Ούζο Μυτιλήνης • 100 ml",
+        "price": "5,00€",
+        "description": "",
+        "ingredients": "Ούζο Μυτιλήνης • 100 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Ούζο Μυτιλήνης • 250 ml",
+        "price": "9,00€",
+        "description": "",
+        "ingredients": "Ούζο Μυτιλήνης • 250 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      }
+    ]
+  },
+  "softDrinks": {
+    "icon": "🥤",
+    "gr": {
+      "name": "Ξενέρωτα",
+      "description": "Σοκολάτες, λεμονάδες, αναψυκτικά και νερό."
+    },
+    "en": {
+      "name": "Non-alcoholic Drinks",
+      "description": "Chocolate, homemade lemonade, soft drinks and water."
+    },
+    "items": [
+      {
+        "name": "Σοκολάτα κρύα / ζεστή",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Σοκολάτα κρύα / ζεστή",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Σπιτική λεμονάδα της Ουρανίας",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Σπιτική λεμονάδα της Ουρανίας",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Σπιτική λεμονάδα με τζίντζερ",
+        "price": "4,50€",
+        "description": "",
+        "ingredients": "Σπιτική λεμονάδα με τζίντζερ",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Αναψυκτικά",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Αναψυκτικά",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Μπουκαλάκι νερό • 0,5 L",
+        "price": "0,50€",
+        "description": "",
+        "ingredients": "Μπουκαλάκι νερό • 0,5 L",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Μπουκάλι νερό • 1 L",
+        "price": "1,00€",
+        "description": "",
+        "ingredients": "Μπουκάλι νερό • 1 L",
+        "allergens": "Δεν έχουν δηλωθεί"
+      }
+    ]
+  },
+  "coffee": {
+    "icon": "☕",
+    "gr": {
+      "name": "Καφές",
+      "description": "Ζεστές και κρύες επιλογές καφέ."
+    },
+    "en": {
+      "name": "Coffee",
+      "description": "Hot and iced coffee choices."
+    },
+    "items": [
+      {
+        "name": "Freddo Espresso",
+        "price": "3,50€",
+        "description": "",
+        "ingredients": "Freddo Espresso",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Freddo Cappuccino",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Freddo Cappuccino",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Espresso μονό",
+        "price": "2,50€",
+        "description": "",
+        "ingredients": "Espresso μονό",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Espresso διπλό",
+        "price": "3,50€",
+        "description": "",
+        "ingredients": "Espresso διπλό",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Cappuccino μονό",
+        "price": "3,00€",
+        "description": "",
+        "ingredients": "Cappuccino μονό",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Cappuccino διπλό",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Cappuccino διπλό",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Τσάι ζεστό",
+        "price": "3,50€",
+        "description": "",
+        "ingredients": "Τσάι ζεστό",
+        "allergens": "Δεν έχουν δηλωθεί"
+      }
+    ]
+  },
+  "wine": {
+    "icon": "🍷",
+    "gr": {
+      "name": "Οίνος",
+      "description": "Κρασί, σανγκρία και οινόμελο."
+    },
+    "en": {
+      "name": "Wine",
+      "description": "Wine, sangria and wine with honey."
+    },
+    "items": [
+      {
+        "name": "Οινομέλο χειροποίητο • ποτήρι",
+        "price": "5,50€",
+        "description": "Σερβίρεται ζεστό ή κρύο.",
+        "ingredients": "Σερβίρεται ζεστό ή κρύο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Οινομέλο χειροποίητο • 250 ml",
+        "price": "6,50€",
+        "description": "Σερβίρεται ζεστό ή κρύο.",
+        "ingredients": "Σερβίρεται ζεστό ή κρύο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Οινομέλο χειροποίητο • 500 ml",
+        "price": "11,00€",
+        "description": "Σερβίρεται ζεστό ή κρύο.",
+        "ingredients": "Σερβίρεται ζεστό ή κρύο.",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Σαγκρία • ποτήρι",
+        "price": "5,00€",
+        "description": "",
+        "ingredients": "Σαγκρία • ποτήρι",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Σαγκρία • 250 ml",
+        "price": "6,00€",
+        "description": "",
+        "ingredients": "Σαγκρία • 250 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Σαγκρία • 500 ml",
+        "price": "10,00€",
+        "description": "",
+        "ingredients": "Σαγκρία • 500 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Μοσχάτο D’Asti • 200 ml",
+        "price": "10,00€",
+        "description": "",
+        "ingredients": "Μοσχάτο D’Asti • 200 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Λευκό ξηρό • ποτήρι",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Λευκό ξηρό • ποτήρι",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Λευκό ξηρό • 250 ml",
+        "price": "5,00€",
+        "description": "",
+        "ingredients": "Λευκό ξηρό • 250 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Λευκό ξηρό • 500 ml",
+        "price": "7,00€",
+        "description": "",
+        "ingredients": "Λευκό ξηρό • 500 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Κόκκινο ημίγλυκο • ποτήρι",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Κόκκινο ημίγλυκο • ποτήρι",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Κόκκινο ημίγλυκο • 250 ml",
+        "price": "5,00€",
+        "description": "",
+        "ingredients": "Κόκκινο ημίγλυκο • 250 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Κόκκινο ημίγλυκο • 500 ml",
+        "price": "7,00€",
+        "description": "",
+        "ingredients": "Κόκκινο ημίγλυκο • 500 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      }
+    ]
+  },
+  "beer": {
+    "icon": "🍺",
+    "gr": {
+      "name": "Ζύθος",
+      "description": "Μπύρες σε φιάλη και βαρέλι."
+    },
+    "en": {
+      "name": "Beer",
+      "description": "Bottled and draft beer."
+    },
+    "items": [
+      {
+        "name": "Ροδίτικη VAP • 500 ml",
+        "price": "4€",
+        "description": "",
+        "ingredients": "Ροδίτικη VAP • 500 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Νύμφη • 500 ml",
+        "price": "5,50€",
+        "description": "",
+        "ingredients": "Νύμφη • 500 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Μάμος • 500 ml",
+        "price": "5,50€",
+        "description": "",
+        "ingredients": "Μάμος • 500 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Sol • 330 ml",
+        "price": "7,00€",
+        "description": "",
+        "ingredients": "Sol • 330 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "ΑΛΦΑ Free 0,3% • 500 ml",
+        "price": "5,50€",
+        "description": "",
+        "ingredients": "ΑΛΦΑ Free 0,3% • 500 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Βαρέλι ΑΛΦΑ • 400 ml",
+        "price": "5,00€",
+        "description": "",
+        "ingredients": "Βαρέλι ΑΛΦΑ • 400 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Μηλοκλέφτης • 330 ml",
+        "price": "5,50€",
+        "description": "",
+        "ingredients": "Μηλοκλέφτης • 330 ml",
+        "allergens": "Δεν έχουν δηλωθεί"
+      }
+    ]
+  },
+  "otherDrinks": {
+    "icon": "🥃",
+    "gr": {
+      "name": "Ποτά & Σφηνάκια",
+      "description": "Απλά και special ποτά και σφηνάκια."
+    },
+    "en": {
+      "name": "Drinks & Shots",
+      "description": "Standard and special drinks and shots."
+    },
+    "items": [
+      {
+        "name": "Απλό ποτό",
+        "price": "7,50€",
+        "description": "",
+        "ingredients": "Απλό ποτό",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Special ποτό",
+        "price": "9,00€",
+        "description": "",
+        "ingredients": "Special ποτό",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Σφηνάκι απλό",
+        "price": "4,00€",
+        "description": "",
+        "ingredients": "Σφηνάκι απλό",
+        "allergens": "Δεν έχουν δηλωθεί"
+      },
+      {
+        "name": "Σφηνάκι special",
+        "price": "5,00€",
+        "description": "",
+        "ingredients": "Σφηνάκι special",
+        "allergens": "Δεν έχουν δηλωθεί"
+      }
+    ]
+  }
+};
+
+
+const ITEM_NAMES_EN = {
+  "Πατατοσαλάτα": "Potato Salad",
+  "Ντολμαδάκια": "Stuffed Vine Leaves",
+  "Σαγανάκι τυρί": "Saganaki Cheese",
+  "Τυροκεφτεδάκια Φλώρινας": "Florina Cheese Balls",
+  "Σφακιανή πίτα": "Sfakian Pie",
+  "Τυρί Μαστέλο Χίου": "Chios Mastelo Cheese",
+  "Ντάκος Ζωγραφιστός": "Cretan Dakos",
+  "Φαλάφελ": "Falafel",
+  "Πατάτες τηγανητές μυρωδάτες": "Aromatic French Fries",
+  "Μεζές του βουνού": "Mountain Meze",
+  "Τηγανόψωμο με πεπερόνι": "Fried Bread with Pepperoni",
+  "Empanadas με κοτόπουλο": "Chicken Empanadas",
+  "Ζουμερές μαριναρισμένες φτερούγες κοτόπουλο": "Juicy Marinated Chicken Wings",
+  "Μπριζολάκια με σάλτσα μελιού": "Pork Chops with Honey Sauce",
+  "Λουκάνικο ξιδάτο • πικάντικο": "Vinegar-Marinated Spicy Sausage",
+  "Λουκάνικο ριγανάτο": "Oregano Sausage",
+  "Super Mario": "Super Mario",
+  "Pac-Man": "Pac-Man",
+  "Cruella de Vil": "Cruella de Vil",
+  "Flintstones": "Flintstones",
+  "ThunderCats": "ThunderCats",
+  "Star Wars": "Star Wars",
+  "Aperol Spritz": "Aperol Spritz",
+  "Zombie": "Zombie",
+  "Porn Star": "Porn Star Martini",
+  "Μαργαρίτα": "Margarita",
+  "Mojito": "Mojito",
+  "Piña Colada": "Piña Colada",
+  "Paloma": "Paloma",
+  "Mai Tai": "Mai Tai",
+  "Daiquiri φράουλα": "Strawberry Daiquiri",
+  "Negroni": "Negroni",
+  "Ρακόμελο χειροποίητο • 100 ml": "Homemade Rakomelo • 100 ml",
+  "Ρακόμελο χειροποίητο • 250 ml": "Homemade Rakomelo • 250 ml",
+  "Ρακόμελο χειροποίητο • 500 ml": "Homemade Rakomelo • 500 ml",
+  "Βοτανόρακι χειροποίητο • 100 ml": "Homemade Herbal Raki • 100 ml",
+  "Βοτανόρακι χειροποίητο • 250 ml": "Homemade Herbal Raki • 250 ml",
+  "Βοτανόρακι χειροποίητο • 500 ml": "Homemade Herbal Raki • 500 ml",
+  "Ρακή Χανίων • 100 ml": "Chania Raki • 100 ml",
+  "Ρακή Χανίων • 250 ml": "Chania Raki • 250 ml",
+  "Τσίπουρο Μοσχάτο χωρίς γλυκάνισο • 100 ml": "Muscat Tsipouro, No Anise • 100 ml",
+  "Τσίπουρο Μοσχάτο χωρίς γλυκάνισο • 250 ml": "Muscat Tsipouro, No Anise • 250 ml",
+  "Ούζο Μυτιλήνης • 100 ml": "Mytilene Ouzo • 100 ml",
+  "Ούζο Μυτιλήνης • 250 ml": "Mytilene Ouzo • 250 ml",
+  "Σοκολάτα κρύα / ζεστή": "Hot / Iced Chocolate",
+  "Σπιτική λεμονάδα της Ουρανίας": "Ourania’s Homemade Lemonade",
+  "Σπιτική λεμονάδα με τζίντζερ": "Homemade Ginger Lemonade",
+  "Αναψυκτικά": "Soft Drinks",
+  "Μπουκαλάκι νερό • 0,5 L": "Bottled Water • 0.5 L",
+  "Μπουκάλι νερό • 1 L": "Bottled Water • 1 L",
+  "Freddo Espresso": "Freddo Espresso",
+  "Freddo Cappuccino": "Freddo Cappuccino",
+  "Espresso μονό": "Single Espresso",
+  "Espresso διπλό": "Double Espresso",
+  "Cappuccino μονό": "Single Cappuccino",
+  "Cappuccino διπλό": "Double Cappuccino",
+  "Τσάι ζεστό": "Hot Tea",
+  "Οινομέλο χειροποίητο • ποτήρι": "Homemade Oinomelo • Glass",
+  "Οινομέλο χειροποίητο • 250 ml": "Homemade Oinomelo • 250 ml",
+  "Οινομέλο χειροποίητο • 500 ml": "Homemade Oinomelo • 500 ml",
+  "Σαγκρία • ποτήρι": "Sangria • Glass",
+  "Σαγκρία • 250 ml": "Sangria • 250 ml",
+  "Σαγκρία • 500 ml": "Sangria • 500 ml",
+  "Μοσχάτο D’Asti • 200 ml": "Moscato d’Asti • 200 ml",
+  "Λευκό ξηρό • ποτήρι": "Dry White Wine • Glass",
+  "Λευκό ξηρό • 250 ml": "Dry White Wine • 250 ml",
+  "Λευκό ξηρό • 500 ml": "Dry White Wine • 500 ml",
+  "Κόκκινο ημίγλυκο • ποτήρι": "Semi-Sweet Red Wine • Glass",
+  "Κόκκινο ημίγλυκο • 250 ml": "Semi-Sweet Red Wine • 250 ml",
+  "Κόκκινο ημίγλυκο • 500 ml": "Semi-Sweet Red Wine • 500 ml",
+  "Ροδίτικη VAP • 500 ml": "Rhodes VAP Beer • 500 ml",
+  "Νύμφη • 500 ml": "Nymfi Beer • 500 ml",
+  "Μάμος • 500 ml": "Mamos Beer • 500 ml",
+  "Sol • 330 ml": "Sol • 330 ml",
+  "ΑΛΦΑ Free 0,3% • 500 ml": "ALFA Free 0.3% • 500 ml",
+  "Βαρέλι ΑΛΦΑ • 400 ml": "Draft ALFA • 400 ml",
+  "Μηλοκλέφτης • 330 ml": "Milo Klefτης Cider • 330 ml",
+  "Απλό ποτό": "Standard Drink",
+  "Special ποτό": "Premium Drink",
+  "Σφηνάκι απλό": "Standard Shot",
+  "Σφηνάκι special": "Premium Shot",
+  "Μεζέδες και γεύσεις για τη μέση.": "Meze and flavours to share.",
+  "Με γέμιση μυζήθρας Νεοχωρίου, άνηθο, μέλι και σουσάμι.": "Filled with Neochori mizithra cheese, dill, honey and sesame.",
+  "Με μαρμελάδα πιπεριάς Φλώρινας.": "Served with Florina pepper jam.",
+  "Με μυζήθρα Νεοχωρίου, ντομάτα και αφράτα παξιμάδια Επιδαύρου.": "With Neochori mizithra cheese, tomato and crisp Epidaurus rusks.",
+  "Με vegan μαγιονέζα τρούφας.": "With vegan truffle mayonnaise.",
+  "Ποικιλία αλλαντικών.": "A selection of cured meats.",
+  "Τηγανητό ψωμί με γέμιση μυζήθρα και πεπερόνι.": "Fried bread filled with mizithra cheese and pepperoni.",
+  "Πιτάκι με τηγανιά κοτόπουλο και τυρί.": "Small pie filled with pan-fried chicken and cheese.",
+  "Ωριμασμένα σε chilli και σκόρδο.": "Marinated with chilli and garlic.",
+  "Με μουστάρδα.": "Served with mustard.",
+  "Με σάλτσα barbecue.": "Served with barbecue sauce.",
+  "Cocktailakia εμπνευσμένα από αγαπημένους ήρωες.": "Signature cocktails inspired by favourite characters.",
+  "Βότκα, καρπούζι και γρεναδίνη.": "Vodka, watermelon and grenadine.",
+  "Ρούμι, ανανάς και passion fruit.": "Rum, pineapple and passion fruit.",
+  "Τζιν, πράσινο μήλο, τζίντζερ και lime.": "Gin, green apple, ginger and lime.",
+  "Τεκίλα, μαστίχα, φράουλα και lime.": "Tequila, mastiha, strawberry and lime.",
+  "Ρακή, μάνγκο, lime, δυόσμος και ζάχαρη.": "Raki, mango, lime, mint and sugar.",
+  "Τζιν, ροδάκινο, μάνγκο και lime.": "Gin, peach, mango and lime.",
+  "Κλασικά cocktails και αγαπημένες επιλογές.": "Classic cocktails and favourite choices.",
+  "Aperol, prosecco, πορτοκάλι και σόδα.": "Aperol, prosecco, orange and soda.",
+  "Λευκό και μαύρο ρούμι, lime, ανανάς και γρεναδίνη.": "White and dark rum, lime, pineapple and grenadine.",
+  "Βότκα, passion fruit, βανίλια και lime.": "Vodka, passion fruit, vanilla and lime.",
+  "Λευκή τεκίλα, triple sec και lime.": "White tequila, triple sec and lime.",
+  "Μαύρο ρούμι, lime, δυόσμος και σόδα.": "White rum, lime, mint and soda.",
+  "Ρούμι, batida de coco, ανανάς και μάνγκο.": "Rum, batida de coco, pineapple and mango.",
+  "Λευκή τεκίλα, lime και σόδα pink grapefruit.": "White tequila, lime and pink grapefruit soda.",
+  "Ρούμι, lime, πορτοκάλι και αμύγδαλο.": "Rum, lime, orange and almond.",
+  "Λευκό ρούμι, lime και φράουλα.": "White rum, lime and strawberry.",
+  "Campari, τζιν και Martini.": "Campari, gin and Martini.",
+  "Χειροποίητα και παραδοσιακά αποστάγματα.": "Homemade and traditional spirits.",
+  "Σερβίρεται ζεστό ή κρύο. Ρακή, μέλι, κανέλα και γαρύφαλλο.": "Served hot or cold. Raki, honey, cinnamon and cloves.",
+  "Σερβίρεται ζεστό ή κρύο.": "Served hot or cold.",
+  "Σοκολάτες, λεμονάδες, αναψυκτικά και νερό.": "Chocolate, lemonades, soft drinks and water.",
+  "Σοκολάτα κρύα / ζεστή": "Hot / iced chocolate",
+  "Σπιτική λεμονάδα της Ουρανίας": "Ourania’s homemade lemonade",
+  "Σπιτική λεμονάδα με τζίντζερ": "Homemade ginger lemonade",
+  "Αναψυκτικά": "Soft drinks",
+  "Μπουκαλάκι νερό • 0,5 L": "Bottled water • 0.5 L",
+  "Μπουκάλι νερό • 1 L": "Bottled water • 1 L",
+  "Ζεστές και κρύες επιλογές καφέ.": "Hot and cold coffee options.",
+  "Espresso μονό": "Single espresso",
+  "Espresso διπλό": "Double espresso",
+  "Cappuccino μονό": "Single cappuccino",
+  "Cappuccino διπλό": "Double cappuccino",
+  "Τσάι ζεστό": "Hot tea",
+  "Κρασί, σανγκρία και οινόμελο.": "Wine, sangria and oinomelo.",
+  "Μπύρες σε φιάλη και βαρέλι.": "Bottled and draught beers.",
+  "Απλά και special ποτά και σφηνάκια.": "Standard and premium drinks and shots.",
+  "Πατατοσαλάτα": "Potato salad",
+  "Ντολμαδάκια": "Stuffed vine leaves",
+  "Σαγανάκι τυρί": "Saganaki cheese",
+  "Τυροκεφτεδάκια Φλώρινας": "Florina cheese balls",
+  "Πατάτες τηγανητές μυρωδάτες": "Aromatic French fries",
+  "Ζουμερές μαριναρισμένες φτερούγες κοτόπουλο": "Juicy marinated chicken wings",
+  "Ρακή Χανίων • 100 ml": "Chania raki • 100 ml",
+  "Ρακή Χανίων • 250 ml": "Chania raki • 250 ml",
+  "Τσίπουρο Μοσχάτο χωρίς γλυκάνισο • 100 ml": "Muscat tsipouro, no anise • 100 ml",
+  "Τσίπουρο Μοσχάτο χωρίς γλυκάνισο • 250 ml": "Muscat tsipouro, no anise • 250 ml",
+  "Ούζο Μυτιλήνης • 100 ml": "Mytilene ouzo • 100 ml",
+  "Ούζο Μυτιλήνης • 250 ml": "Mytilene ouzo • 250 ml",
+  "Σαγκρία • ποτήρι": "Sangria • glass",
+  "Σαγκρία • 250 ml": "Sangria • 250 ml",
+  "Σαγκρία • 500 ml": "Sangria • 500 ml",
+  "Μοσχάτο D’Asti • 200 ml": "Moscato d’Asti • 200 ml",
+  "Λευκό ξηρό • ποτήρι": "Dry white wine • glass",
+  "Λευκό ξηρό • 250 ml": "Dry white wine • 250 ml",
+  "Λευκό ξηρό • 500 ml": "Dry white wine • 500 ml",
+  "Κόκκινο ημίγλυκο • ποτήρι": "Semi-sweet red wine • glass",
+  "Κόκκινο ημίγλυκο • 250 ml": "Semi-sweet red wine • 250 ml",
+  "Κόκκινο ημίγλυκο • 500 ml": "Semi-sweet red wine • 500 ml",
+  "Ροδίτικη VAP • 500 ml": "Rhodian VAP beer • 500 ml",
+  "Νύμφη • 500 ml": "Nymfi beer • 500 ml",
+  "Μάμος • 500 ml": "Mamos beer • 500 ml",
+  "ΑΛΦΑ Free 0,3% • 500 ml": "ALFA Free 0.3% • 500 ml",
+  "Βαρέλι ΑΛΦΑ • 400 ml": "Draft ALFA • 400 ml",
+  "Μηλοκλέφτης • 330 ml": "Milo Klefτης cider • 330 ml"
+};
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let LANGUAGE = "gr";
+
+let CURRENT_CATEGORY = null;
+
+let CURRENT_ITEM = null;
+
+
+/* =====================================================
+   LANGUAGE
+===================================================== */
+
+function setLanguage(lang){
+
+  LANGUAGE = lang;
+
+  document.documentElement.lang =
+    lang === "gr"
+      ? "el"
+      : "en";
+
+
+  document
+    .getElementById("grBtn")
+    .classList
+    .toggle(
+      "active",
+      lang === "gr"
+    );
+
+
+  document
+    .getElementById("enBtn")
+    .classList
+    .toggle(
+      "active",
+      lang === "en"
+    );
+
+
+  document
+    .querySelectorAll("[data-gr]")
+    .forEach(el=>{
+
+      const value =
+        lang === "gr"
+          ? el.dataset.gr
+          : el.dataset.en;
+
+      if(value !== undefined){
+        el.textContent = value;
+      }
+
+    });
+
+
+
+
+
+  document.querySelectorAll("[data-placeholder-gr]").forEach(el=>{
+    el.placeholder = lang === "gr"
+      ? el.dataset.placeholderGr
+      : el.dataset.placeholderEn;
+  });
+
+  renderCategories();
+
+  if(CURRENT_CATEGORY){
+    renderList();
+  }
+
+  if(CURRENT_ITEM !== null){
+    renderDetail();
+  }
+
+}
+
+
+/* =====================================================
+   SCREEN
+===================================================== */
+
+function showScreen(id){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(screen=>{
+      screen.classList.remove("active");
+    });
+
+
+  document
+    .getElementById(id)
+    .classList.add("active");
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"instant"
+  });
+
+}
+
+
+/* =====================================================
+   LANDING
+===================================================== */
+
+function goLanding(){
+
+  closeMenu();
+
+  CURRENT_CATEGORY = null;
+
+  CURRENT_ITEM = null;
+
+  showScreen("landingScreen");
+
+}
+
+
+/* =====================================================
+   MENU HOME
+===================================================== */
+
+function openMenuHome(){
+
+  closeMenu();
+
+  CURRENT_CATEGORY = null;
+
+  CURRENT_ITEM = null;
+
+  renderCategories();
+
+  showScreen("menuHomeScreen");
+
+}
+
+
+/* =====================================================
+   CATEGORIES
+===================================================== */
+
+function renderCategories(){
+
+  const container =
+    document.getElementById("categories");
+
+  if(!container) return;
+
+  container.innerHTML = "";
+
+
+  Object.entries(MENU)
+    .forEach(([key,category])=>{
+
+      const data =
+        category[LANGUAGE];
+
+
+      const button =
+        document.createElement("button");
+
+
+      button.className =
+        "category";
+
+
+      button.onclick = ()=>{
+        openList(key);
+      };
+
+
+      button.innerHTML = `
+
+        <div class="category-icon">
+          ${category.icon}
+        </div>
+
+        <div class="category-title">
+          ${data.name}
+        </div>
+
+        <div class="category-description">
+          ${data.description}
+        </div>
+
+      `;
+
+
+      container.appendChild(button);
+
+    });
+
+}
+
+
+/* =====================================================
+   OPEN LIST
+===================================================== */
+
+function openList(category){
+
+  closeMenu();
+
+  CURRENT_CATEGORY =
+    category;
+
+  CURRENT_ITEM =
+    null;
+
+  renderList();
+
+  showScreen("listScreen");
+
+}
+
+
+/* =====================================================
+   RENDER LIST
+===================================================== */
+
+function renderList(){
+
+  const category =
+    MENU[CURRENT_CATEGORY];
+
+  if(!category) return;
+
+
+  const data =
+    category[LANGUAGE];
+
+
+  document
+    .getElementById("listTitle")
+    .textContent =
+      data.name;
+
+
+  document
+    .getElementById("listSubtitle")
+    .textContent =
+      data.description;
+
+
+  const container =
+    document.getElementById("items");
+
+
+  container.innerHTML = "";
+
+
+  category.items.forEach(
+    (item,index)=>{
+
+      const row =
+        document.createElement("button");
+
+
+      row.className =
+        "item";
+
+
+      row.onclick = ()=>{
+        openDetail(index);
+      };
+
+
+      row.innerHTML = `
+
+        <div class="item-info">
+
+          <div class="item-name">
+            ${LANGUAGE === "en" ? (ITEM_NAMES_EN[item.name] || item.name) : item.name}
+          </div>
+
+          <div class="item-desc">
+            ${LANGUAGE === "en" ? (ITEM_NAMES_EN[item.description] || item.description) : item.description}
+          </div>
+
+        </div>
+
+        <div class="item-price">
+          ${item.price}
+        </div>
+
+      `;
+
+
+      container.appendChild(row);
+
+    });
+
+}
+
+
+/* =====================================================
+   DETAIL
+===================================================== */
+
+function openDetail(index){
+
+  CURRENT_ITEM =
+    index;
+
+  renderDetail();
+
+  showScreen("detailScreen");
+
+}
+
+
+function renderDetail(){
+
+  const category =
+    MENU[CURRENT_CATEGORY];
+
+  if(
+    !category ||
+    CURRENT_ITEM === null
+  ) return;
+
+
+  const item =
+    category.items[CURRENT_ITEM];
+
+
+  document
+    .getElementById("detailIcon")
+    .textContent =
+      category.icon;
+
+
+  document
+    .getElementById("detailName")
+    .textContent =
+      LANGUAGE === "en" ? (ITEM_NAMES_EN[item.name] || item.name) : item.name;
+
+
+  document
+    .getElementById("detailPrice")
+    .textContent =
+      item.price;
+
+
+  document
+    .getElementById("detailDescription")
+    .textContent =
+      LANGUAGE === "en" ? (ITEM_NAMES_EN[item.description] || item.description) : item.description;
+
+
+  document
+    .getElementById("detailIngredients")
+    .textContent =
+      LANGUAGE === "en" ? (ITEM_NAMES_EN[item.ingredients] || item.ingredients) : item.ingredients;
+
+
+  document
+    .getElementById("detailAllergens")
+    .textContent =
+      LANGUAGE === "en" ? "Not specified" : item.allergens;
+
+}
+
+
+/* =====================================================
+   GO LIST
+===================================================== */
+
+function goList(){
+
+  if(CURRENT_CATEGORY){
+
+    renderList();
+
+    showScreen("listScreen");
+
+  }else{
+
+    openMenuHome();
+
+  }
+
+}
+
+
+/* =====================================================
+   EVENTS
+===================================================== */
+
+function openEvents(){
+
+  closeMenu();
+
+  showScreen("eventsScreen");
+
+}
+
+
+/* =====================================================
+   MEMBERSHIP
+===================================================== */
+
+function openMembership(){
+
+  closeMenu();
+
+  showScreen("membershipScreen");
+
+}
+
+
+/* =====================================================
+   SIDE MENU
+===================================================== */
+
+function openMenu(){
+
+  document
+    .getElementById("sideMenu")
+    .classList
+    .add("active");
+
+
+  document
+    .getElementById("overlay")
+    .classList
+    .add("active");
+
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+function closeMenu(){
+
+  document
+    .getElementById("sideMenu")
+    .classList
+    .remove("active");
+
+
+  document
+    .getElementById("overlay")
+    .classList
+    .remove("active");
+
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+/* =====================================================
+   CAROUSEL
+===================================================== */
+
+let currentSlide = 0;
+
+let carouselTimer = null;
+
+let touchStartX = 0;
+
+let touchEndX = 0;
+
+
+const carouselTrack =
+  document.getElementById(
+    "carouselTrack"
+  );
+
+
+const carouselSlides =
+  document.querySelectorAll(
+    ".carousel-slide"
+  );
+
+
+const carouselDots =
+  document.getElementById(
+    "carouselDots"
+  );
+
+
+/* create dots */
+
+carouselSlides.forEach(
+  (slide,index)=>{
+
+    const dot =
+      document.createElement("button");
+
+    dot.className =
+      "carousel-dot";
+
+
+    dot.setAttribute(
+      "aria-label",
+      "Slide " + (index + 1)
+    );
+
+
+    dot.onclick = ()=>{
+
+      goToSlide(index);
+
+      restartCarousel();
+
+    };
+
+
+    carouselDots.appendChild(dot);
+
+  }
+);
+
+
+function updateCarousel(){
+
+  carouselTrack.style.transform =
+    "translateX(-" +
+    (currentSlide * 100) +
+    "%)";
+
+
+  document
+    .querySelectorAll(".carousel-dot")
+    .forEach((dot,index)=>{
+
+      dot.classList.toggle(
+        "active",
+        index === currentSlide
+      );
+
+    });
+
+}
+
+
+function goToSlide(index){
+
+  if(index < 0){
+
+    index =
+      carouselSlides.length - 1;
+
+  }
+
+
+  if(index >= carouselSlides.length){
+
+    index = 0;
+
+  }
+
+
+  currentSlide =
+    index;
+
+
+  updateCarousel();
+
+}
+
+
+function nextSlide(){
+
+  goToSlide(
+    currentSlide + 1
+  );
+
+}
+
+
+function previousSlide(){
+
+  goToSlide(
+    currentSlide - 1
+  );
+
+}
+
+
+/* =====================================================
+   AUTOMATIC CAROUSEL
+===================================================== */
+
+function startCarousel(){
+
+  clearInterval(carouselTimer);
+
+  carouselTimer =
+    setInterval(
+      nextSlide,
+      5000
+    );
+
+}
+
+
+function restartCarousel(){
+
+  clearInterval(carouselTimer);
+
+  startCarousel();
+
+}
+
+
+/* =====================================================
+   SWIPE
+===================================================== */
+
+const carousel =
+  document.getElementById(
+    "carousel"
+  );
+
+
+carousel.addEventListener(
+  "touchstart",
+  event=>{
+
+    touchStartX =
+      event.changedTouches[0].screenX;
+
+  },
+  {passive:true}
+);
+
+
+carousel.addEventListener(
+  "touchend",
+  event=>{
+
+    touchEndX =
+      event.changedTouches[0].screenX;
+
+
+    const difference =
+      touchStartX - touchEndX;
+
+
+    if(Math.abs(difference) > 45){
+
+      if(difference > 0){
+
+        nextSlide();
+
+      }else{
+
+        previousSlide();
+
+      }
+
+      restartCarousel();
+
+    }
+
+  },
+  {passive:true}
+);
+
+
+/* =====================================================
+   PAUSE DESKTOP HOVER
+===================================================== */
+
+carousel.addEventListener(
+  "mouseenter",
+  ()=>{
+
+    clearInterval(
+      carouselTimer
+    );
+
+  }
+);
+
+
+carousel.addEventListener(
+  "mouseleave",
+  ()=>{
+
+    startCarousel();
+
+  }
+);
+
+
+/* =====================================================
+   OVERLAY
+===================================================== */
+
+document
+  .getElementById("overlay")
+  .addEventListener(
+    "click",
+    closeMenu
+  );
+
+
+/* =====================================================
+   ESC
+===================================================== */
+
+document.addEventListener(
+  "keydown",
+  event=>{
+
+    if(event.key === "Escape"){
+
+      closeMenu();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+setLanguage("gr");
+
+renderCategories();
+
+updateCarousel();
+
+startCarousel();
+
+</script>
+
+</body>
+</html>
